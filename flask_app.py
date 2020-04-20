@@ -13,12 +13,12 @@ logging.basicConfig(level=logging.INFO)
 # которые мы записали в прошлом пункте.
 
 cities = {
-    'москва': ['1540737/daa6e420d33102bf6947',
-               '213044/7df73ae4cc715175059e'],
-    'нью-йорк': ['1652229/728d5c86707054d4745f',
-                 '1030494/aca7ed7acefde2606bdc'],
-    'париж': ["1652229/f77136c2364eb90a3ea8",
-              '3450494/aca7ed7acefde22341bdc']
+    'москва': ['965417/e50b4519d0a408de6727',
+               '965417/cecba236555dad5582a0'],
+    'нью-йорк': ['1030494/6821a2cdf8c7fea68794',
+                 '213044/ff5346476275ff2d54c1'],
+    'париж': ["1652229/167c78736f4cd20b48d1",
+              '1030494/1641b2d522e76176ed07']
 }
 
 # создаем словарь, где для каждого пользователя
@@ -123,3 +123,7 @@ def get_first_name(req):
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
+
+# c0cf3284-dd96-4ab0-a025-7554898445b0
+
+# AgAAAAAqf_iLAAT7o_EKmn5n1kmmvwSwyWpHM_I
