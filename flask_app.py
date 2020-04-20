@@ -88,6 +88,10 @@ def handle_dialog(res, req):
         if req['request']['original_utterance'] == 'помощь':
             res['response']['text'] = 'Выберите нужный вам город.'
         else:
+            res['response']['buttons'] = [{
+                'title': 'помощь',
+                'hide': False
+            }]
             # ищем город в сообщение от пользователя
             city = get_city(req)
             # если этот город среди известных нам,
