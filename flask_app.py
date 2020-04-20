@@ -87,21 +87,22 @@ def handle_dialog(res, req):
     else:
         if req['request']['original_utterance'] == 'помощь':
             res['response']['text'] = 'Выберите нужный вам город.'
-        # ищем город в сообщение от пользователя
-        city = get_city(req)
-        # если этот город среди известных нам,
-        # то показываем его (выбираем одну из двух картинок случайно)
-        if city in cities:
-            res['response']['card'] = {}
-            res['response']['card']['type'] = 'BigImage'
-            res['response']['card']['title'] = 'Этот город я знаю.'
-            res['response']['card']['image_id'] = random.choice(cities[city])
-            res['response']['text'] = 'Я угадал!'
-        # если не нашел, то отвечает пользователю
-        # 'Первый раз слышу об этом городе.'
         else:
-            res['response']['text'] = \
-                'Первый раз слышу об этом городе. Попробуй еще разок!'
+            # ищем город в сообщение от пользователя
+            city = get_city(req)
+            # если этот город среди известных нам,
+            # то показываем его (выбираем одну из двух картинок случайно)
+            if city in cities:
+                res['response']['card'] = {}
+                res['response']['card']['type'] = 'BigImage'
+                res['response']['card']['title'] = 'Этот город я знаю.'
+                res['response']['card']['image_id'] = random.choice(cities[city])
+                res['response']['text'] = 'Я угадал!'
+            # если не нашел, то отвечает пользователю
+            # 'Первый раз слышу об этом городе.'
+            else:
+                res['response']['text'] = \
+                    'Первый раз слышу об этом городе. Попробуй еще разок!'
 
 
 def get_city(req):
