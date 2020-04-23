@@ -8,6 +8,16 @@ app = Flask(__name__)
 
 logging.basicConfig(level=logging.INFO)
 
+
+'''
+git:
+https://github.com/NovakWilson/What_city/tree/help
+
+
+Webhook URL:
+https://whatcity1.herokuapp.com/post
+'''
+
 # создаем словарь, в котором ключ — название города,
 # а значение — массив, где перечислены id картинок,
 # которые мы записали в прошлом пункте.
