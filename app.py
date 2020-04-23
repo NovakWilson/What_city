@@ -13,6 +13,14 @@ app = Flask(__name__)
 logging.basicConfig(level=logging.INFO, filename='app.log',
                     format='%(asctime)s %(levelname)s %(name)s %(message)s')
 
+'''
+git:
+https://github.com/NovakWilson/What_city/tree/maps
+
+
+Webhook URL:
+https://whatcity2.herokuapp.com/post
+'''
 
 @app.route('/post', methods=['POST'])
 def main():
