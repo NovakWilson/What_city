@@ -68,7 +68,7 @@ def handle_dialog(res, req):
             ]
     else:
         if not sessionStorage[user_id]['game_started']:
-            if 'Да' in req['request']['nlu']['tokens']:
+            if 'да' in req['request']['nlu']['tokens']:
                 if len(sessionStorage[user_id]['guessed_cities']) == 3:
                     res['response']['text'] = 'Ты отгадал все города!'
                     res['end_session'] = True
@@ -76,7 +76,7 @@ def handle_dialog(res, req):
                     sessionStorage[user_id]['game_started'] = True
                     sessionStorage[user_id]['attempt'] = 1
                     play_game(res, req)
-            elif 'Нет' in req['request']['nlu']['tokens']:
+            elif 'нет' in req['request']['nlu']['tokens']:
                 res['response']['text'] = 'Ну и ладно!'
                 res['end_session'] = True
             else:
