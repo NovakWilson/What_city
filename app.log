@@ -67,3 +67,23 @@ KeyError: 'response'
 2020-04-23 19:26:07,021 WARNING werkzeug  * Debugger is active!
 2020-04-23 19:26:07,027 INFO werkzeug  * Debugger PIN: 325-596-469
 2020-04-23 19:26:07,034 INFO werkzeug  * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+2020-04-23 19:29:33,720 INFO werkzeug  * Detected change in 'D:\\Artem\\which_city\\geo.py', reloading
+2020-04-23 19:29:33,737 INFO werkzeug  * Restarting with stat
+2020-04-23 19:37:06,878 INFO werkzeug  * Restarting with stat
+2020-04-23 19:37:07,240 WARNING werkzeug  * Debugger is active!
+2020-04-23 19:37:07,246 INFO werkzeug  * Debugger PIN: 325-596-469
+2020-04-23 19:37:07,252 INFO werkzeug  * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+2020-04-23 19:37:19,184 INFO root Request: {'request': {'nlu': {'tokens': ['москва', 'париж'], 'entities': [{'type': 'YANDEX.GEO', 'tokens': {'start': 0, 'end': 1}, 'value': {'city': 'москва'}}, {'type': 'YANDEX.GEO', 'tokens': {'start': 1, 'end': 2}, 'value': {'city': 'париж'}}, {'type': 'YANDEX.GEO', 'tokens': {'start': 1, 'end': 2}, 'value': {'city': 'париж'}}], 'intents': {}}, 'original_utterance': 'Артем'}, 'session': {'new': False, 'message_id': 4, 'session_id': '2eac4854-fce721f3-b845abba-20d60', 'skill_id': '3ad36498-f5rd-4079-a14b-788652932056', 'user_id': 'AC9WC3DF6FCE052E45A4566A48E6B7193774B84814CE49A922E163B8B29881DC'}, 'version': '1.0'}
+2020-04-23 19:37:19,184 INFO root Request: {'session': {'new': False, 'message_id': 4, 'session_id': '2eac4854-fce721f3-b845abba-20d60', 'skill_id': '3ad36498-f5rd-4079-a14b-788652932056', 'user_id': 'AC9WC3DF6FCE052E45A4566A48E6B7193774B84814CE49A922E163B8B29881DC'}, 'version': '1.0', 'response': {'end_session': False, 'text': 'Слишком много городов!'}}
+2020-04-23 19:37:19,184 INFO werkzeug 127.0.0.1 - - [23/Apr/2020 19:37:19] "[37mPOST /post HTTP/1.1[0m" 200 -
+2020-04-23 19:37:36,214 INFO root Request: {'request': {'nlu': {'tokens': ['москва', 'париж'], 'entities': [{'type': 'YANDEX.GEO', 'tokens': {'start': 0, 'end': 1}, 'value': {'city': 'москва'}}, {'type': 'YANDEX.GEO', 'tokens': {'start': 1, 'end': 2}, 'value': {'city': 'париж'}}], 'intents': {}}, 'original_utterance': 'Артем'}, 'session': {'new': False, 'message_id': 4, 'session_id': '2eac4854-fce721f3-b845abba-20d60', 'skill_id': '3ad36498-f5rd-4079-a14b-788652932056', 'user_id': 'AC9WC3DF6FCE052E45A4566A48E6B7193774B84814CE49A922E163B8B29881DC'}, 'version': '1.0'}
+2020-04-23 19:37:36,543 INFO root Request: {'session': {'new': False, 'message_id': 4, 'session_id': '2eac4854-fce721f3-b845abba-20d60', 'skill_id': '3ad36498-f5rd-4079-a14b-788652932056', 'user_id': 'AC9WC3DF6FCE052E45A4566A48E6B7193774B84814CE49A922E163B8B29881DC'}, 'version': '1.0', 'response': {'end_session': False, 'text': 'Расстояние между этими городами: 2487 км.'}}
+2020-04-23 19:37:36,544 INFO werkzeug 127.0.0.1 - - [23/Apr/2020 19:37:36] "[37mPOST /post HTTP/1.1[0m" 200 -
+2020-04-23 19:37:46,649 INFO root Request: {'request': {'nlu': {'tokens': ['москва', 'париж'], 'entities': [{'type': 'YANDEX.GEO', 'tokens': {'start': 0, 'end': 1}, 'value': {'city': 'москва'}}], 'intents': {}}, 'original_utterance': 'Артем'}, 'session': {'new': False, 'message_id': 4, 'session_id': '2eac4854-fce721f3-b845abba-20d60', 'skill_id': '3ad36498-f5rd-4079-a14b-788652932056', 'user_id': 'AC9WC3DF6FCE052E45A4566A48E6B7193774B84814CE49A922E163B8B29881DC'}, 'version': '1.0'}
+2020-04-23 19:37:46,928 INFO root Request: {'session': {'new': False, 'message_id': 4, 'session_id': '2eac4854-fce721f3-b845abba-20d60', 'skill_id': '3ad36498-f5rd-4079-a14b-788652932056', 'user_id': 'AC9WC3DF6FCE052E45A4566A48E6B7193774B84814CE49A922E163B8B29881DC'}, 'version': '1.0', 'response': {'end_session': False, 'text': 'Этот город в стране - Россия'}}
+2020-04-23 19:37:46,928 INFO werkzeug 127.0.0.1 - - [23/Apr/2020 19:37:46] "[37mPOST /post HTTP/1.1[0m" 200 -
+2020-04-23 19:38:51,220 INFO werkzeug  * Detected change in 'D:\\Artem\\which_city\\app.py', reloading
+2020-04-23 19:38:51,237 INFO werkzeug  * Restarting with stat
+2020-04-23 19:38:51,663 WARNING werkzeug  * Debugger is active!
+2020-04-23 19:38:51,669 INFO werkzeug  * Debugger PIN: 325-596-469
+2020-04-23 19:38:51,676 INFO werkzeug  * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
