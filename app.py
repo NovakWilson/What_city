@@ -1,22 +1,24 @@
 from flask import Flask, request
 import logging
 import json
-# импортируем функции из нашего второго файла geo
-from geo import get_geo_info, get_distance
+import random
 import os
 
 app = Flask(__name__)
 
-# Добавляем логирование в файл.
-# Чтобы найти файл, перейдите на pythonwhere в раздел files,
-# он лежит в корневой папке
-logging.basicConfig(level=logging.INFO, filename='app.log',
-                    format='%(asctime)s %(levelname)s %(name)s %(message)s')
+logging.basicConfig(level=logging.INFO)
 
-'''
-git:
-https://github.com/NovakWilson/What_city/tree/get_geo_info
-'''
+cities = {
+    'москва': ['965417/e50b4519d0a408de6727',
+               '965417/cecba236555dad5582a0'],
+    'нью-йорк': ['1030494/6821a2cdf8c7fea68794',
+                 '213044/ff5346476275ff2d54c1'],
+    'париж': ["1652229/167c78736f4cd20b48d1",
+              '1030494/1641b2d522e76176ed07']
+}
+
+
+sessionStorage = {}
 
 
 @app.route('/post', methods=['POST'])
@@ -30,41 +32,116 @@ def main():
         }
     }
     handle_dialog(response, request.json)
-    logging.info('Request: %r', response)
+    logging.info('Response: %r', response)
     return json.dumps(response)
 
 
 def handle_dialog(res, req):
     user_id = req['session']['user_id']
     if req['session']['new']:
-        res['response']['text'] = \
-            'Привет! Я могу показать город или сказать расстояние между городами!'
+        res['response']['text'] = 'Привет! Назови свое имя!'
+        sessionStorage[user_id] = {
+            'first_name': None,
+            'game_started': False
+        }
         return
-    # Получаем города из нашего
-    cities = get_cities(req)
-    if not cities:
-        res['response']['text'] = 'Ты не написал название не одного города!'
-    elif len(cities) == 1:
-        res['response']['text'] = 'Этот город в стране - ' + \
-                                  get_geo_info(cities[0], 'country')
-    elif len(cities) == 2:
-        distance = get_distance(get_geo_info(
-            cities[0], 'coordinates'), get_geo_info(cities[1], 'coordinates'))
-        res['response']['text'] = 'Расстояние между этими городами: ' + \
-                                  str(round(distance)) + ' км.'
+
+    if sessionStorage[user_id]['first_name'] is None:
+        first_name = get_first_name(req)
+        if first_name is None:
+            res['response']['text'] = 'Не расслышала имя. Повтори, пожалуйста!'
+        else:
+            sessionStorage[user_id]['first_name'] = first_name
+            sessionStorage[user_id]['guessed_cities'] = []
+            res['response']['text'] = 'Приятно познакомиться, ' \
+                                      + first_name.title() \
+                                      + '. Я - Алиса. Отгадаешь, какой город на фото?'
+            res['response']['buttons'] = [
+                {
+                    'title': 'Да',
+                    'hide': True
+                },
+                {
+                    'title': 'Нет',
+                    'hide': True
+                }
+            ]
     else:
-        res['response']['text'] = 'Слишком много городов!'
+        if not sessionStorage[user_id]['game_started']:
+            if 'Да' in req['request']['nlu']['tokens']:
+                if len(sessionStorage[user_id]['guessed_cities']) == 3:
+                    res['response']['text'] = 'Ты отгадал все города!'
+                    res['end_session'] = True
+                else:
+                    sessionStorage[user_id]['game_started'] = True
+                    sessionStorage[user_id]['attempt'] = 1
+                    play_game(res, req)
+            elif 'Нет' in req['request']['nlu']['tokens']:
+                res['response']['text'] = 'Ну и ладно!'
+                res['end_session'] = True
+            else:
+                res['response']['text'] = 'Не поняла ответа! Так да или нет?'
+                res['response']['buttons'] = [
+                    {
+                        'title': 'Да',
+                        'hide': True
+                    },
+                    {
+                        'title': 'Нет',
+                        'hide': True
+                    }
+                ]
+        else:
+            play_game(res, req)
 
 
-def get_cities(req):
-    cities = []
+def play_game(res, req):
+    user_id = req['session']['user_id']
+    attempt = sessionStorage[user_id]['attempt']
+    if attempt == 1:
+        city = random.choice(list(cities))
+        while city in sessionStorage[user_id]['guessed_cities']:
+            city = random.choice(list(cities))
+        sessionStorage[user_id]['city'] = city
+        res['response']['card'] = {}
+        res['response']['card']['type'] = 'BigImage'
+        res['response']['card']['title'] = 'Что это за город?'
+        res['response']['card']['image_id'] = cities[city][attempt - 1]
+        res['response']['text'] = 'Тогда сыграем!'
+    else:
+        city = sessionStorage[user_id]['city']
+        if get_city(req) == city:
+            res['response']['text'] = 'Правильно! Сыграем ещё?'
+            sessionStorage[user_id]['guessed_cities'].append(city)
+            sessionStorage[user_id]['game_started'] = False
+            return
+        else:
+            if attempt == 3:
+                res['response']['text'] = f'Вы пытались. Это — {city.title()}. Сыграем еще?'
+                sessionStorage[user_id]['game_started'] = False
+                sessionStorage[user_id]['guessed_cities'].append(city)
+                return
+            else:
+                res['response']['card'] = {}
+                res['response']['card']['type'] = 'BigImage'
+                res['response']['card']['title'] = 'Неправильно. Вот тебе дополнительное фото'
+                res['response']['card']['image_id'] = cities[city][attempt - 1]
+                res['response']['text'] = 'А вот и не угадал!'
+    sessionStorage[user_id]['attempt'] += 1
+
+
+def get_city(req):
     for entity in req['request']['nlu']['entities']:
         if entity['type'] == 'YANDEX.GEO':
-            if 'city' in entity['value']:
-                cities.append(entity['value']['city'])
-    return cities
+            return entity['value'].get('city', None)
+
+
+def get_first_name(req):
+    for entity in req['request']['nlu']['entities']:
+        if entity['type'] == 'YANDEX.FIO':
+            return entity['value'].get('first_name', None)
 
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    app.run(host='0.0.0.0', port=port)
