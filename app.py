@@ -67,7 +67,8 @@ def handle_dialog(res, req):
                 }
             ]
     else:
-        city = req['request']['original_utterance']
+        if req['request']['original_utterance'] != 'Покажи город на карте':
+            city = req['request']['original_utterance']
         if not sessionStorage[user_id]['game_started']:
             if 'да' in req['request']['nlu']['tokens']:
                 if len(sessionStorage[user_id]['guessed_cities']) == 3:
