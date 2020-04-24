@@ -79,7 +79,7 @@ def handle_dialog(res, req):
             elif 'нет' in req['request']['nlu']['tokens']:
                 res['response']['text'] = 'Ну и ладно!'
                 res['end_session'] = True
-            elif 'покажи город на карте' in req['request']['nlu']['tokens']:
+            elif 'покажи' in req['request']['nlu']['tokens']:
                 res['response']['text'] = 'Город можно найти здесь: https://yandex.ru/maps/?mode=search&text=Москва'
                 res['end_session'] = False
             else:
