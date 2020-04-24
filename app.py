@@ -67,6 +67,7 @@ def handle_dialog(res, req):
                 }
             ]
     else:
+        city = req['request']['original_utterance']
         if not sessionStorage[user_id]['game_started']:
             if 'да' in req['request']['nlu']['tokens']:
                 if len(sessionStorage[user_id]['guessed_cities']) == 3:
@@ -80,7 +81,7 @@ def handle_dialog(res, req):
                 res['response']['text'] = 'Ну и ладно!'
                 res['end_session'] = True
             elif 'покажи' in req['request']['nlu']['tokens']:
-                res['response']['text'] = 'Город можно найти здесь: https://yandex.ru/maps/?mode=search&text=Москва'
+                res['response']['text'] = 'Город можно найти здесь: https://yandex.ru/maps/?mode=search&text={}'.format(city)
                 res['end_session'] = False
             else:
                 res['response']['text'] = 'Не поняла ответа! Так да или нет?'
