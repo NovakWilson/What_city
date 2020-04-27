@@ -103,7 +103,7 @@ def handle_dialog(res, req):
 def play_game(res, req):
     user_id = req['session']['user_id']
     if sessionStorage[user_id]['is_city_right']:
-        if get_country(sessionStorage[user_id]['city']) in req['request']['nlu']['tokens']:
+        if get_country(sessionStorage[user_id]['city']).lower() in req['request']['nlu']['tokens']:
             res['response']['text'] = 'Правильно! Сыграем еще?'
             sessionStorage[user_id]['is_city_right'] = False
             sessionStorage[user_id]['game_started'] = False
