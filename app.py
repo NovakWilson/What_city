@@ -64,15 +64,15 @@ def handle_dialog(res, req):
     else:
         cities = get_cities(req)
         if not cities:
-            res['response']['text'] = '{}, вы не написали название не одного города!'.format(sessionStorage[user_id]['first_name'])
+            res['response']['text'] = '{}, вы не написали название не одного города!'.format(sessionStorage[user_id]['first_name'].capitalize())
         elif len(cities) == 1:
-            res['response']['text'] = '{1}, этот город в стране - {0}'.format(get_country(cities[0]), sessionStorage[user_id]['first_name'])
+            res['response']['text'] = '{1}, этот город в стране - {0}'.format(get_country(cities[0]), sessionStorage[user_id]['first_name'].capitalize())
         elif len(cities) == 2:
             distance = get_distance(get_coordinates(
                 cities[0]), get_coordinates(cities[1]))
-            res['response']['text'] = '{}, расстояние между этими городами: {} км.'.format(sessionStorage[user_id]['first_name'], str(round(distance)))
+            res['response']['text'] = '{}, расстояние между этими городами: {} км.'.format(sessionStorage[user_id]['first_name'].capitalize(), str(round(distance)))
         else:
-            res['response']['text'] = '{}, вы вводите слишком много городов!'.format(sessionStorage[user_id]['first_name'])
+            res['response']['text'] = '{}, вы вводите слишком много городов!'.format(sessionStorage[user_id]['first_name'].capitalize())
 
 
 def get_cities(req):
