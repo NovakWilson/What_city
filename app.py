@@ -22,6 +22,9 @@ Webhook URL:
 https://whatcity2.herokuapp.com/post
 '''
 
+sessionStorage = {}
+
+
 @app.route('/post', methods=['POST'])
 def main():
     logging.info('Request: %r', request.json)
@@ -40,23 +43,36 @@ def main():
 def handle_dialog(res, req):
     user_id = req['session']['user_id']
     if req['session']['new']:
-        res['response']['text'] = \
-            'Привет! Я могу показать город или сказать расстояние между городами!'
+        res['response']['text'] = 'Привет! Я могу показать город или сказать расстояние между городами! Назови себя'
+        sessionStorage[user_id] = {
+            'first_name': None,
+            'game_started': False
+        }
         return
-    # Получаем города из нашего
-    cities = get_cities(req)
-    if not cities:
-        res['response']['text'] = 'Ты не написал название не одного города!'
-    elif len(cities) == 1:
-        res['response']['text'] = 'Этот город в стране - ' + \
-                                  get_country(cities[0])
-    elif len(cities) == 2:
-        distance = get_distance(get_coordinates(
-            cities[0]), get_coordinates(cities[1]))
-        res['response']['text'] = 'Расстояние между этими городами: ' + \
-                                  str(round(distance)) + ' км.'
+
+    if sessionStorage[user_id]['first_name'] is None:
+        first_name = get_first_name(req)
+        if first_name is None:
+            res['response']['text'] = 'Не расслышала имя. Повтори, пожалуйста!'
+        else:
+            sessionStorage[user_id]['first_name'] = first_name
+            sessionStorage[user_id]['guessed_cities'] = []
+            res['response']['text'] = 'Приятно познакомиться, ' \
+                                      + first_name.title() \
+                                      + '. Я - Алиса. Введи название одного или двух городов.'
+            return
     else:
-        res['response']['text'] = 'Слишком много городов!'
+        cities = get_cities(req)
+        if not cities:
+            res['response']['text'] = '{}, вы не написали название не одного города!'.format(sessionStorage[user_id]['first_name'])
+        elif len(cities) == 1:
+            res['response']['text'] = '{1}, этот город в стране - {0}'.format(get_country(cities[0]), sessionStorage[user_id]['first_name'])
+        elif len(cities) == 2:
+            distance = get_distance(get_coordinates(
+                cities[0]), get_coordinates(cities[1]))
+            res['response']['text'] = '{}, расстояние между этими городами: {} км.'.format(sessionStorage[user_id]['first_name'], str(round(distance)))
+        else:
+            res['response']['text'] = '{}, вы вводите слишком много городов!'.format(sessionStorage[user_id]['first_name'])
 
 
 def get_cities(req):
@@ -66,6 +82,12 @@ def get_cities(req):
             if 'city' in entity['value']:
                 cities.append(entity['value']['city'])
     return cities
+
+
+def get_first_name(req):
+    for entity in req['request']['nlu']['entities']:
+        if entity['type'] == 'YANDEX.FIO':
+            return entity['value'].get('first_name', None)
 
 
 if __name__ == '__main__':
