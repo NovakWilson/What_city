@@ -3,6 +3,7 @@ import logging
 import json
 import random
 import os
+from geo import get_country
 
 app = Flask(__name__)
 
@@ -74,6 +75,7 @@ def handle_dialog(res, req):
                     res['end_session'] = True
                 else:
                     sessionStorage[user_id]['game_started'] = True
+                    sessionStorage[user_id]['is_city_right'] = False
                     sessionStorage[user_id]['attempt'] = 1
                     play_game(res, req)
             elif 'нет' in req['request']['nlu']['tokens']:
@@ -100,6 +102,10 @@ def handle_dialog(res, req):
 
 def play_game(res, req):
     user_id = req['session']['user_id']
+    if sessionStorage[user_id]['is_city_right']:
+        if get_country(sessionStorage[user_id]['city']) in req['request']['nlu']['tokens']:
+            res['response']['text'] = 'Правильно! Сыграем еще?'
+            return
     attempt = sessionStorage[user_id]['attempt']
     if attempt == 1:
         city = random.choice(list(cities))
@@ -114,7 +120,8 @@ def play_game(res, req):
     else:
         city = sessionStorage[user_id]['city']
         if get_city(req) == city:
-            res['response']['text'] = 'Правильно! Сыграем ещё?'
+            sessionStorage[user_id]['is_city_right'] = True
+            res['response']['text'] = 'Правильно! А в какой стране этот город?'
             sessionStorage[user_id]['guessed_cities'].append(city)
             res['response']['buttons'] = [
                     {
