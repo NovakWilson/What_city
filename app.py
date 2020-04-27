@@ -107,6 +107,16 @@ def play_game(res, req):
             res['response']['text'] = 'Правильно! Сыграем еще?'
             sessionStorage[user_id]['is_city_right'] = False
             sessionStorage[user_id]['game_started'] = False
+            res['response']['buttons'] = [
+                    {
+                        'title': 'Да',
+                        'hide': True
+                    },
+                    {
+                        'title': 'Нет',
+                        'hide': True
+                    }
+                ]
             return
     else:
         attempt = sessionStorage[user_id]['attempt']
