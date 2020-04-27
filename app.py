@@ -118,6 +118,21 @@ def play_game(res, req):
                     }
                 ]
             return
+        else:
+            res['response']['text'] = 'Неправильно, {} находится в {}! Сыграем еще?'.format(sessionStorage[user_id]['city'], get_country(sessionStorage[user_id]['city']))
+            sessionStorage[user_id]['is_city_right'] = False
+            sessionStorage[user_id]['game_started'] = False
+            res['response']['buttons'] = [
+                    {
+                        'title': 'Да',
+                        'hide': True
+                    },
+                    {
+                        'title': 'Нет',
+                        'hide': True
+                    }
+                ]
+            return
     else:
         attempt = sessionStorage[user_id]['attempt']
         if attempt == 1:
