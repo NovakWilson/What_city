@@ -7,6 +7,15 @@ from geo import get_country
 
 app = Flask(__name__)
 
+'''
+git:
+https://github.com/NovakWilson/What_city/tree/what_country
+
+
+Webhook URL:
+https://whatcountry.herokuapp.com/post
+'''
+
 logging.basicConfig(level=logging.INFO)
 
 cities = {
