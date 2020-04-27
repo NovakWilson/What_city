@@ -105,45 +105,47 @@ def play_game(res, req):
     if sessionStorage[user_id]['is_city_right']:
         if get_country(sessionStorage[user_id]['city']) in req['request']['nlu']['tokens']:
             res['response']['text'] = 'Правильно! Сыграем еще?'
+            sessionStorage[user_id]['is_city_right'] = False
             return
-    attempt = sessionStorage[user_id]['attempt']
-    if attempt == 1:
-        city = random.choice(list(cities))
-        while city in sessionStorage[user_id]['guessed_cities']:
-            city = random.choice(list(cities))
-        sessionStorage[user_id]['city'] = city
-        res['response']['card'] = {}
-        res['response']['card']['type'] = 'BigImage'
-        res['response']['card']['title'] = 'Что это за город?'
-        res['response']['card']['image_id'] = cities[city][attempt - 1]
-        res['response']['text'] = 'Тогда сыграем!'
     else:
-        city = sessionStorage[user_id]['city']
-        if get_city(req) == city:
-            sessionStorage[user_id]['is_city_right'] = True
-            res['response']['text'] = 'Правильно! А в какой стране этот город?'
-            sessionStorage[user_id]['guessed_cities'].append(city)
-            res['response']['buttons'] = [
-                    {
-                        'title': 'Покажи город на карте',
-                        'hide': True
-                    }
-                ]
-            sessionStorage[user_id]['game_started'] = False
-            return
+        attempt = sessionStorage[user_id]['attempt']
+        if attempt == 1:
+            city = random.choice(list(cities))
+            while city in sessionStorage[user_id]['guessed_cities']:
+                city = random.choice(list(cities))
+            sessionStorage[user_id]['city'] = city
+            res['response']['card'] = {}
+            res['response']['card']['type'] = 'BigImage'
+            res['response']['card']['title'] = 'Что это за город?'
+            res['response']['card']['image_id'] = cities[city][attempt - 1]
+            res['response']['text'] = 'Тогда сыграем!'
         else:
-            if attempt == 3:
-                res['response']['text'] = f'Вы пытались. Это — {city.title()}. Сыграем еще?'
-                sessionStorage[user_id]['game_started'] = False
+            city = sessionStorage[user_id]['city']
+            if get_city(req) == city:
+                sessionStorage[user_id]['is_city_right'] = True
+                res['response']['text'] = 'Правильно! А в какой стране этот город?'
                 sessionStorage[user_id]['guessed_cities'].append(city)
+                res['response']['buttons'] = [
+                        {
+                            'title': 'Покажи город на карте',
+                            'hide': True
+                        }
+                    ]
+                sessionStorage[user_id]['game_started'] = False
                 return
             else:
-                res['response']['card'] = {}
-                res['response']['card']['type'] = 'BigImage'
-                res['response']['card']['title'] = 'Неправильно. Вот тебе дополнительное фото'
-                res['response']['card']['image_id'] = cities[city][attempt - 1]
-                res['response']['text'] = 'А вот и не угадал!'
-    sessionStorage[user_id]['attempt'] += 1
+                if attempt == 3:
+                    res['response']['text'] = f'Вы пытались. Это — {city.title()}. Сыграем еще?'
+                    sessionStorage[user_id]['game_started'] = False
+                    sessionStorage[user_id]['guessed_cities'].append(city)
+                    return
+                else:
+                    res['response']['card'] = {}
+                    res['response']['card']['type'] = 'BigImage'
+                    res['response']['card']['title'] = 'Неправильно. Вот тебе дополнительное фото'
+                    res['response']['card']['image_id'] = cities[city][attempt - 1]
+                    res['response']['text'] = 'А вот и не угадал!'
+        sessionStorage[user_id]['attempt'] += 1
 
 
 def get_city(req):
